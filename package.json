@@ -1,9 +1,9 @@
 {
   "name": "attasist",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A library of helper functions for front-end and back-end JavaScript applications",
-  "main": "dist/index.js",
-  "module": "cjs/index.js",
+  "main": "cjs/index.js",
+  "module": "es/index.js",
   "jsnext:main": "es/index.js",
   "scripts": {
     "debug": "nodemon test/index.js --watch lib --watch test --inspect --quiet --exec 'clear && npm run test'",
