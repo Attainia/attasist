@@ -1,0 +1,95 @@
+import test from 'tape'
+import {isBlankString, isValidEmail, isPlainObj, isStringieThingie} from '../lib/validations'
+
+test('Spaces in an email string are caught', (t) => {
+    t.equal(isValidEmail('lorem ipsum @ dolor.sit.amet'), false)
+    t.end()
+})
+
+test('Missing an @ symbol in an email fails', (t) => {
+    t.equal(isValidEmail('loremipsumATgmail.com'), false)
+    t.end()
+})
+
+test('Basic email format passes', (t) => {
+    t.equal(isValidEmail('loremipsum@gmail.com'), true)
+    t.end()
+})
+
+test('Emails are case-insensitive', (t) => {
+    t.equal(isValidEmail('LOREMIPSUM@GMAIL.COM'), true)
+    t.end()
+})
+
+test('Non-objects fail object validation', (t) => {
+    t.equal(isPlainObj('I am an object'), false, 'a string')
+    t.equal(isPlainObj(123), false, 'a number')
+    t.equal(isPlainObj(true), false, 'a boolean')
+    t.end()
+})
+
+test('Other object types fail validation', (t) => {
+    t.equal(isPlainObj(null), false, 'a null value')
+    t.equal(isPlainObj(new Date()), false, 'a new Date instance')
+    t.equal(isPlainObj(new RegExp(/\S/)), false, 'a new regular expression instance')
+    t.equal(isPlainObj([{a: 'I'}, {b: 'am'}, {c: 'object'}]), false, 'an array of objects')
+    t.end()
+})
+
+test('What we really mean by "object" passes validation', (t) => {
+    t.equal(isPlainObj({}), true, 'an empty object')
+    t.equal(isPlainObj({a: 'I am an object'}), true, 'a non-empty object')
+    t.end()
+})
+
+test('Whitespace is considered a blank string', (t) => {
+    t.equal(isBlankString('  '), true)
+    t.end()
+})
+
+test('Strings with NO characters are considered blank', (t) => {
+    t.equal(isBlankString(''), true)
+    t.end()
+})
+
+test('Strings with non-whitespace characters are NOT considered blank', (t) => {
+    t.equal(isBlankString(' lorem ipsum dolor sit amet '), false)
+    t.end()
+})
+
+test('Other kinds of "empties" are not lumped into the same boat with "blanks"', (t) => {
+    t.equal(isBlankString({}), false, 'empty object')
+    t.equal(isBlankString(0), false, 'a value of zero')
+    t.equal(isBlankString(null), false, 'a null value')
+    t.equal(isBlankString(), false, 'an undefined value')
+    t.equal(isBlankString([]), false, 'an empty array')
+    t.end()
+})
+
+test('When it\'s a thingie, but not a stringie', (t) => {
+    t.equal(isStringieThingie({a: 'b'}), false, 'an object')
+    t.equal(isStringieThingie(true), false, 'a boolean')
+    t.equal(isStringieThingie([1, 2, 3]), false, 'an array')
+    t.end()
+})
+
+test('When it\'s an empty thingie, it\'s not a stringie', (t) => {
+    t.equal(isStringieThingie({}), false, 'an object')
+    t.equal(isStringieThingie([]), false, 'an array')
+    t.equal(isStringieThingie(''), false, 'a string with no chars')
+    t.equal(isStringieThingie(' '), false, 'a string with only whitespace')
+    t.equal(isStringieThingie(null), false, 'a null value')
+    t.equal(isStringieThingie(), false, 'an undefined value')
+    t.end()
+})
+
+test('Numbers are a thingie that count as stringies', (t) => {
+    t.equal(isStringieThingie(123), true)
+    t.equal(isStringieThingie(0), true)
+    t.end()
+})
+
+test('Non-blank strings are stringies', (t) => {
+    t.equal(isStringieThingie('I am string'), true)
+    t.end()
+})
