@@ -1,9 +1,11 @@
 import async from 'rollup-plugin-async'
 import commonjs from 'rollup-plugin-commonjs'
 import nodeResolve from 'rollup-plugin-node-resolve'
+import builtins from 'rollup-plugin-node-builtins'
 import babel from 'rollup-plugin-babel'
 import replace from 'rollup-plugin-replace'
 import uglify from 'rollup-plugin-uglify'
+import {minify} from 'uglify-es'
 
 const env = process.env.NODE_ENV
 const config = {
@@ -13,6 +15,7 @@ const config = {
         exports: 'named'
     },
     plugins: [
+        builtins(),
         nodeResolve({jsnext: true}),
         commonjs({include: 'node_modules/**'}),
         async(),
@@ -30,7 +33,7 @@ if (env === 'production') {
                 unsafe_comps: true,
                 warnings: false
             }
-        })
+        }, minify)
     )
 }
 

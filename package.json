@@ -102,10 +102,12 @@
     "rollup-plugin-async": "1.2.0",
     "rollup-plugin-babel": "3.0.2",
     "rollup-plugin-commonjs": "8.2.6",
+    "rollup-plugin-node-builtins": "2.1.2",
     "rollup-plugin-node-resolve": "3.0.0",
     "rollup-plugin-replace": "2.0.0",
     "rollup-plugin-uglify": "2.0.1",
-    "tape": "4.8.0"
+    "tape": "4.8.0",
+    "uglify-es": "3.3.9"
   },
   "prettier": {
     "bracketSpacing": false,
