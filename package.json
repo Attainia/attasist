@@ -1,6 +1,6 @@
 {
   "name": "attasist",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A library of helper functions for front-end and back-end JavaScript applications",
   "main": "cjs/index.js",
   "module": "es/index.js",
@@ -11,6 +11,7 @@
     "clean": "rimraf dist es coverage",
     "lint": "eslint lib test",
     "test": "cross-env BABEL_ENV=commonjs babel-node test | faucet",
+    "prepublish": "npm run build",
     "prebuild": "npm run clean && npm run lint && npm test",
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel lib --out-dir cjs",
     "build:es": "cross-env BABEL_ENV=es babel lib --out-dir es",

@@ -1,11 +1,12 @@
 /* eslint max-len: "off" */
 import test from 'tape'
-import {parseError} from '../lib/requests'
+import {parseError, parseStatus, parseStatusText} from '../lib/requests'
 
 const detail = 'don\'t bother me with the'
 const error = 'does not compute'
 const message = 'sending out an S.O.S.'
 const statusText = 'Invalid something'
+const status = 403
 
 test('"parseError" favors a "detail" prop at the top of an object, over everything else', (t) => {
     t.equal(parseError({message, detail, error, statusText}), detail)
@@ -63,5 +64,22 @@ test('"parseError" applies the same rules of precedence to a nested object named
     t.equal(parseError({response: {data: {message, error, statusText}}}), message, 'message')
     t.equal(parseError({response: {data: {error, statusText}}}), error, 'error')
     t.equal(parseError({response: {data: {statusText}}}), statusText, 'statusText')
+    t.end()
+})
+
+test('"parseStatusText" finds a "statusText" prop from inside a given object', (t) => {
+    t.equal(parseStatusText({statusText}), statusText, 'at the top level')
+    t.equal(parseStatusText({response: {statusText}}), statusText, 'nested inside "response"')
+    t.equal(parseStatusText({data: {statusText}}), statusText, 'nested inside "data"')
+    t.equal(parseStatusText({response: {data: {statusText}}}), statusText, 'or nested inside "response.data"')
+    t.end()
+})
+
+test('"parseStatus" finds a "status" prop from inside a given object', (t) => {
+    t.equal(parseStatus({status}), status, 'at the top level')
+    t.equal(parseStatus({response: {status}}), status, 'nested inside "response"')
+    t.equal(parseStatus({data: {status}}), status, 'nested inside "data"')
+    t.equal(parseStatus({response: {data: {status}}}), status, 'or nested inside "response.data"')
+    t.equal(parseStatus({response: {data: {statusText}}}), 500, 'and defaults to 500 when all else fails')
     t.end()
 })
