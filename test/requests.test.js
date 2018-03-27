@@ -4,21 +4,27 @@ import {parseError, parseStatus, parseStatusText} from '../lib/requests'
 
 const detail = 'don\'t bother me with the'
 const error = 'does not compute'
+const error_description = 'invalid stuffy stuff'
 const message = 'sending out an S.O.S.'
 const statusText = 'Invalid something'
 const status = 403
 
 test('"parseError" favors a "detail" prop at the top of an object, over everything else', (t) => {
-    t.equal(parseError({message, detail, error, statusText}), detail)
+    t.equal(parseError({message, detail, error, error_description, statusText}), detail)
     t.end()
 })
 
 test('"parseError" favors a "message" prop at the top of an object, over everything except detail', (t) => {
-    t.equal(parseError({message, error, statusText}), message)
+    t.equal(parseError({message, error, error_description, statusText}), message)
     t.end()
 })
 
-test('"parseError" favors an "error" prop at the top of an object, over everything except detail and message', (t) => {
+test('"parseError" favors an "error_description" prop at the top of an object, over everything except detail and message', (t) => {
+    t.equal(parseError({error_description, statusText}), error_description)
+    t.end()
+})
+
+test('"parseError" favors an "error" prop at the top of an object, over everything except detail, error_description, and message', (t) => {
     t.equal(parseError({error, statusText}), error)
     t.end()
 })
@@ -44,8 +50,9 @@ test('"parseError" handles a string error message rather than a only message nes
 })
 
 test('"parseError" applies the same rules of precedence to a nested object named "data"', (t) => {
-    t.equal(parseError({data: {detail, message, error, statusText}}), detail, 'detail')
-    t.equal(parseError({data: {message, error, statusText}}), message, 'message')
+    t.equal(parseError({data: {detail, message, error, error_description, statusText}}), detail, 'detail')
+    t.equal(parseError({data: {message, error, error_description, statusText}}), message, 'message')
+    t.equal(parseError({data: {error, error_description, statusText}}), error_description, 'error_description')
     t.equal(parseError({data: {error, statusText}}), error, 'error')
     t.equal(parseError({data: {statusText}}), statusText, 'statusText')
     t.end()
@@ -54,6 +61,7 @@ test('"parseError" applies the same rules of precedence to a nested object named
 test('"parseError" applies the same rules of precedence to a nested object named "response"', (t) => {
     t.equal(parseError({response: {detail, message, error, statusText}}), detail, 'detail')
     t.equal(parseError({response: {message, error, statusText}}), message, 'message')
+    t.equal(parseError({response: {error, error_description, statusText}}), error_description, 'error_description')
     t.equal(parseError({response: {error, statusText}}), error, 'error')
     t.equal(parseError({response: {statusText}}), statusText, 'statusText')
     t.end()
@@ -62,6 +70,7 @@ test('"parseError" applies the same rules of precedence to a nested object named
 test('"parseError" applies the same rules of precedence to a nested object named "data", nested in a "response" object', (t) => {
     t.equal(parseError({response: {data: {detail, message, error, statusText}}}), detail, 'detail')
     t.equal(parseError({response: {data: {message, error, statusText}}}), message, 'message')
+    t.equal(parseError({response: {data: {error, error_description, statusText}}}), error_description, 'error_description')
     t.equal(parseError({response: {data: {error, statusText}}}), error, 'error')
     t.equal(parseError({response: {data: {statusText}}}), statusText, 'statusText')
     t.end()
