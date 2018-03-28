@@ -1,5 +1,12 @@
 import test from 'tape'
-import {hashEm, dateMe, toUSD} from '../lib/transforms'
+import {__, concat, compose, map, join, toPairs, filter, pipe, prop, test as regTest} from 'ramda'
+import {hashEm, dateMe, toUSD, fuzzySpec, mergeSpec} from '../lib/transforms'
+
+const specResult = {
+    morrison: 'jim',
+    hendrix: 'jimmi',
+    carter: 'jimmy'
+}
 
 test('pretty formatting of date includes time and shaves off unnecessary zero-padding', (t) => {
     t.equal(dateMe('01/01/2018'), '1/1/2018, 12:00:00 AM')
@@ -38,6 +45,42 @@ test('A collection of objects is NOT hash-mapped if there is no "id" prop in the
         hashEm([{id: 'lorem'}, {name: 'seneca'}, {id: 'dolor'}, {id: 'sit'}]),
         {lorem: 0, dolor: 2, sit: 3},
         'when some objects are missing an id, they are excluded from the hashmap'
+    )
+    t.end()
+})
+
+test('"mergeSpec" blends an object with a copy of itself transformed according to a spec', (t) => {
+    t.deepEqual(
+        mergeSpec({
+            morrison: prop('morrison'),
+            hendrix: pipe(prop('hendrix'), concat(__, 'mi')),
+            carter: pipe(prop('carter'), concat(__, 'my'))
+        }, {
+            morrison: 'jim',
+            hendrix: 'jim',
+            carter: 'jim'
+        }),
+        specResult
+    )
+    t.end()
+})
+
+test('"fuzzySpec" blends an object with a copy of itself transformed according to a spec', (t) => {
+    t.deepEqual(
+        fuzzySpec({
+            hendrix: concat(__, 'mi'),
+            carter: concat(__, 'my'),
+            dean: 'james',
+            jims: compose(map(join(', ')), toPairs, filter(regTest(/^jim/)))
+        }, {
+            morrison: 'jim',
+            hendrix: 'jim',
+            carter: 'jim'
+        }), {
+            ...specResult,
+            dean: 'james',
+            jims: ['morrison, jim', 'hendrix, jimmi', 'carter, jimmy']
+        }
     )
     t.end()
 })
