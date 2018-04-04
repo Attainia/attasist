@@ -1,5 +1,24 @@
 import test from 'tape'
-import {__, concat, compose, map, join, toPairs, filter, pipe, prop, test as regTest} from 'ramda'
+import {
+    __,
+    toString,
+    trim,
+    when,
+    toUpper,
+    is,
+    concat,
+    compose,
+    evolve,
+    map,
+    pick,
+    join,
+    toPairs,
+    filter,
+    pipe,
+    prop,
+    values,
+    test as regTest
+} from 'ramda'
 import {hashEm, dateMe, toUSD, fuzzySpec, mergeSpec} from '../lib/transforms'
 
 const specResult = {
@@ -62,6 +81,38 @@ test('"mergeSpec" blends an object with a copy of itself transformed according t
         }),
         specResult
     )
+    t.end()
+})
+
+test('"mergeSpec" merges new props onto the original object', (t) => {
+    t.deepEqual(mergeSpec({
+      fullName: compose(join(' '), values, pick(['firstName', 'lastName'])),
+      address: pipe(prop('address'), evolve({
+        street: trim,
+        city: compose(str => str.replace(/(?:^|\s)\S/g, toUpper), trim),
+        state: toUpper,
+        zip: compose(trim, when(is(Number), toString))
+      }))
+    }, {
+      firstName: 'Montgomery',
+      lastName: 'Burns',
+      address: {
+        street: '1000 Mammon Lane, ',
+        city: 'springfield',
+        state: 'or',
+        zip: 97403
+      }
+    }), {
+      firstName: 'Montgomery',
+      lastName: 'Burns',
+      address: {
+        street: '1000 Mammon Lane,',
+        city: 'Springfield',
+        state: 'OR',
+        zip: '97403'
+      },
+      fullName: 'Montgomery Burns'
+    })
     t.end()
 })
 
