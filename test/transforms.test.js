@@ -24,8 +24,10 @@ import {
 import {
     hashEm,
     dateMe,
+    filterByKeys,
     transformValuesByKeys,
     transformMatchingValues,
+    transformByKeyValPredicates,
     toUSD,
     shape,
     mergeSpec
@@ -159,6 +161,27 @@ test('"transformValuesByKeys" transforms an object\'s values whose keys match a 
     t.deepEqual(
         transformValuesByKeys(regTest(/m$/), always({}))({lorem: null, ipsum: null, dolor: 'sit', amet: undefined}),
         {lorem: {}, ipsum: {}, dolor: 'sit', amet: undefined}
+    )
+    t.end()
+})
+
+// eslint-disable-next-line max-len
+test('"transformByKeyValPredicates" Applies a transform to an object whose keys passed a predicate and then the values pass another predicate', (t) => {
+    t.deepEqual(
+        transformByKeyValPredicates(
+            regTest(/m$/),
+            equals(null),
+            always({})
+        )({lorem: null, ipsum: 42, dolor: 'sit', amet: undefined}),
+        {lorem: {}, ipsum: 42, dolor: 'sit', amet: undefined}
+    )
+    t.end()
+})
+
+test('"filterByKeys" filters out the key/value pairs from an object whose keys fail a given predicate', (t) => {
+    t.deepEqual(
+        filterByKeys(regTest(/m$/))({lorem: null, ipsum: 42, dolor: 'sit', amet: undefined}),
+        {lorem: null, ipsum: 42}
     )
     t.end()
 })
