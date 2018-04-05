@@ -1,6 +1,8 @@
 import test from 'tape'
 import {
     __,
+    always,
+    equals,
     toString,
     trim,
     when,
@@ -19,7 +21,16 @@ import {
     values,
     test as regTest
 } from 'ramda'
-import {hashEm, dateMe, toUSD, fuzzySpec, mergeSpec} from '../lib/transforms'
+import {
+    hashEm,
+    dateMe,
+    transformValuesByKeys,
+    transformMatchingValues,
+    toUSD,
+    shape,
+    mergeSpec
+} from '../lib/transforms'
+    
 
 const specResult = {
     morrison: 'jim',
@@ -116,9 +127,9 @@ test('"mergeSpec" merges new props onto the original object', (t) => {
     t.end()
 })
 
-test('"fuzzySpec" blends an object with a copy of itself transformed according to a spec', (t) => {
+test('"shape" blends an object with a copy of itself transformed according to a spec', (t) => {
     t.deepEqual(
-        fuzzySpec({
+        shape({
             hendrix: concat(__, 'mi'),
             carter: concat(__, 'my'),
             dean: 'james',
@@ -132,6 +143,22 @@ test('"fuzzySpec" blends an object with a copy of itself transformed according t
             dean: 'james',
             jims: ['morrison, jim', 'hendrix, jimmi', 'carter, jimmy']
         }
+    )
+    t.end()
+})
+
+test('"transformMatchingValues" transforms an object\'s values which match a predicate', (t) => {
+    t.deepEqual(
+        transformMatchingValues(equals(null), always({}))({lorem: null, ipsum: null, dolor: 'sit', amet: undefined}),
+        {lorem: {}, ipsum: {}, dolor: 'sit', amet: undefined}
+    )
+    t.end()
+})
+
+test('"transformValuesByKeys" transforms an object\'s values whose keys match a predicate', (t) => {
+    t.deepEqual(
+        transformValuesByKeys(regTest(/m$/), always({}))({lorem: null, ipsum: null, dolor: 'sit', amet: undefined}),
+        {lorem: {}, ipsum: {}, dolor: 'sit', amet: undefined}
     )
     t.end()
 })
