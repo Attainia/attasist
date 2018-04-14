@@ -1,6 +1,6 @@
 {
   "name": "attasist",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "A library of helper functions for front-end and back-end JavaScript applications",
   "main": "cjs/index.js",
   "module": "es/index.js",
@@ -11,6 +11,7 @@
     "clean": "rimraf dist es coverage",
     "lint": "eslint lib test",
     "test": "cross-env BABEL_ENV=commonjs babel-node test | faucet",
+    "generate-docs": "jsdoc -c jsdoc.json",
     "prepublish": "npm run build",
     "prebuild": "npm run clean && npm run lint && npm test",
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel lib --out-dir cjs",
@@ -56,6 +57,7 @@
     "Lawrence <lawrence.grant@attainia.com>"
   ],
   "dependencies": {
+    "docdash": "github:Attainia/docdash#master",
     "qs": "6.5.1",
     "ramda": "0.25.0"
   },
@@ -95,6 +97,7 @@
     "eslint-plugin-import": "2.2.0",
     "faucet": "0.0.1",
     "glob": "7.1.1",
+    "jsdoc": "3.5.5",
     "nodemon": "1.11.0",
     "rimraf": "2.6.2",
     "rollup": "0.50.0",

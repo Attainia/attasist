@@ -29,6 +29,7 @@ import {
     transformMatchingValues,
     transformByKeyValPredicates,
     toUSD,
+    toHashmap,
     shape,
     mergeSpec
 } from '../lib/transforms'
@@ -77,6 +78,14 @@ test('A collection of objects is NOT hash-mapped if there is no "id" prop in the
         hashEm([{id: 'lorem'}, {name: 'seneca'}, {id: 'dolor'}, {id: 'sit'}]),
         {lorem: 0, dolor: 2, sit: 3},
         'when some objects are missing an id, they are excluded from the hashmap'
+    )
+    t.end()
+})
+
+test('"toHashmap" A collection of objects is hash-mapped with a key of "id" and a value of the object', (t) => {
+    t.deepEqual(
+        toHashmap([{id: 'lorem'}, {id: 'ipsum'}, {id: 'dolor'}, {id: 'sit'}]),
+        {lorem: {id: 'lorem'}, ipsum: {id: 'ipsum'}, dolor: {id: 'dolor'}, sit: {id: 'sit'}}
     )
     t.end()
 })
