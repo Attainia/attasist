@@ -11,11 +11,8 @@ import {
     concat,
     compose,
     evolve,
-    map,
     pick,
     join,
-    toPairs,
-    filter,
     pipe,
     prop,
     values,
@@ -30,7 +27,6 @@ import {
     transformByKeyValPredicates,
     toUSD,
     toHashmap,
-    shape,
     mergeSpec
 } from '../lib/transforms'
     
@@ -135,26 +131,6 @@ test('"mergeSpec" merges new props onto the original object', (t) => {
       },
       fullName: 'Montgomery Burns'
     })
-    t.end()
-})
-
-test('"shape" blends an object with a copy of itself transformed according to a spec', (t) => {
-    t.deepEqual(
-        shape({
-            hendrix: concat(__, 'mi'),
-            carter: concat(__, 'my'),
-            dean: 'james',
-            jims: compose(map(join(', ')), toPairs, filter(regTest(/^jim/)))
-        }, {
-            morrison: 'jim',
-            hendrix: 'jim',
-            carter: 'jim'
-        }), {
-            ...specResult,
-            dean: 'james',
-            jims: ['morrison, jim', 'hendrix, jimmi', 'carter, jimmy']
-        }
-    )
     t.end()
 })
 
