@@ -24,6 +24,7 @@ import {
 import {
     hashEm,
     dateMe,
+    etc,
     filterByKeys,
     transformValuesByKeys,
     transformMatchingValues,
@@ -191,6 +192,14 @@ test('"filterByKeys" filters out the key/value pairs from an object whose keys f
     t.deepEqual(
         filterByKeys(regTest(/m$/))({lorem: null, ipsum: 42, dolor: 'sit', amet: undefined}),
         {lorem: null, ipsum: 42}
+    )
+    t.end()
+})
+
+test('"etc" truncatest a long string of text at a specified index and appends ...', (t) => {
+    t.equal(
+        etc(26)('Lorem ipsum dolor sit amet, consectetur elipsing elit'),
+        'Lorem ipsum dolor sit amet...'
     )
     t.end()
 })
