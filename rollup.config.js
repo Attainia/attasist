@@ -11,7 +11,7 @@ const env = process.env.NODE_ENV
 const config = {
     output: {
         format: 'umd',
-        name: '@attainia/little-helpers',
+        name: 'attasist',
         exports: 'named'
     },
     plugins: [
