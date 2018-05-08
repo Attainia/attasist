@@ -174,8 +174,12 @@ test('"filterByKeys" filters out the key/value pairs from an object whose keys f
 
 test('"etc" truncatest a long string of text at a specified index and appends ...', (t) => {
     t.equal(
-        etc(26)('Lorem ipsum dolor sit amet, consectetur elipsing elit'),
+        etc(26, 'Lorem ipsum dolor sit amet, consectetur elipsing elit'),
         'Lorem ipsum dolor sit amet...'
+    )
+    t.equal(
+        etc(400)('Lorem ipsum dolor sit amet, consectetur elipsing elit'),
+        'Lorem ipsum dolor sit amet, consectetur elipsing elit'
     )
     t.end()
 })
