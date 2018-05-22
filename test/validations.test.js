@@ -1,5 +1,5 @@
 import test from 'tape'
-import {isBlankString, isValidEmail, isPlainObj, isStringieThingie} from '../lib/validations'
+import {isPromise, isBlankString, isValidEmail, isPlainObj, isStringieThingie} from '../lib/validations'
 
 test('Spaces in an email string are caught', (t) => {
     t.equal(isValidEmail('lorem ipsum @ dolor.sit.amet'), false)
@@ -39,6 +39,23 @@ test('Other object types fail validation', (t) => {
 test('What we really mean by "object" passes validation', (t) => {
     t.equal(isPlainObj({}), true, 'an empty object')
     t.equal(isPlainObj({a: 'I am an object'}), true, 'a non-empty object')
+    t.end()
+})
+
+test('Non-promises fail promise validation', (t) => {
+    t.equal(isPromise('I am a promise'), false, 'a string')
+    t.equal(isPromise(123), false, 'a number')
+    t.equal(isPromise(true), false, 'a boolean')
+    t.equal(isPromise(null), false, 'a null value')
+    t.equal(isPromise(new Date()), false, 'a new Date instance')
+    t.equal(isPromise(new RegExp(/\S/)), false, 'a new regular expression instance')
+    t.equal(isPromise([{a: 'I'}, {b: 'am'}, {c: 'promise'}]), false, 'an array of objects')
+    t.end()
+})
+
+test('Promises pass validation', (t) => {
+    t.equal(isPromise(new Promise((resolve) => resolve())), true, 'from newing up a Promise')
+    t.equal(isPromise(Promise.resolve({a: 'I am a promise'})), true, 'from a simple Promise.resolve')
     t.end()
 })
 
