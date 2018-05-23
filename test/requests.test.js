@@ -1,6 +1,6 @@
 /* eslint max-len: "off" */
 import test from 'tape'
-import {parseError, parseStatus, parseStatusText} from '../lib/requests'
+import {makeApiUrl, parseError, parseStatus, parseStatusText} from '../lib/requests'
 
 const detail = 'don\'t bother me with the'
 const error = 'does not compute'
@@ -8,6 +8,27 @@ const error_description = 'invalid stuffy stuff'
 const message = 'sending out an S.O.S.'
 const statusText = 'Invalid something'
 const status = 403
+
+
+test('"makeApiUrl" joins a base url with an endpoint', (t) => {
+    t.equal(makeApiUrl('http://localhost:5000'), 'http://localhost:5000', 'returns base if no endpoint')
+    t.equal(makeApiUrl('http://localhost:5000', null, {}), 'http://localhost:5000', 'returns base if no endpoint')
+    t.end()
+})
+
+test('"makeApiUrl" serializes query string params', (t) => {
+    t.equal(makeApiUrl('http://localhost:5000', 'endpoint', {}), 'http://localhost:5000/endpoint')
+    t.equal(makeApiUrl('http://localhost:5000', null, {}), 'http://localhost:5000')
+    t.equal(
+        makeApiUrl('http://localhost:5000', 'endpoint', {lorem: 'ipsum', dolor: 'sit'}),
+        'http://localhost:5000/endpoint?lorem=ipsum&dolor=sit'
+    )
+    t.equal(
+        makeApiUrl('http://localhost:5000', 'endpoint/', {lorem: 'ipsum', dolor: 'sit'}),
+        'http://localhost:5000/endpoint/?lorem=ipsum&dolor=sit'
+    )
+    t.end()
+})
 
 test('"parseError" favors a "detail" prop at the top of an object, over everything else', (t) => {
     t.equal(parseError({message, detail, error, error_description, statusText}), detail)
