@@ -1,23 +1,5 @@
 import test from 'tape'
-import {
-    __,
-    always,
-    equals,
-    toString,
-    trim,
-    when,
-    toUpper,
-    is,
-    concat,
-    compose,
-    evolve,
-    pick,
-    join,
-    pipe,
-    prop,
-    values,
-    test as regTest
-} from 'ramda'
+import {always, equals, test as regTest} from 'ramda'
 import {
     hashEm,
     dateMe,
@@ -27,17 +9,9 @@ import {
     transformMatchingValues,
     transformByKeyValPredicates,
     toUSD,
-    toHashmap,
-    mergeSpec
+    toHashmap
 } from '../lib/transforms'
     
-
-const specResult = {
-    morrison: 'jim',
-    hendrix: 'jimmi',
-    carter: 'jimmy'
-}
-
 test('pretty formatting of date includes time and shaves off unnecessary zero-padding', (t) => {
     t.equal(dateMe('01/01/2018'), '1/1/2018, 12:00:00 AM')
     t.end()
@@ -84,54 +58,6 @@ test('"toHashmap" A collection of objects is hash-mapped with a key of "id" and 
         toHashmap([{id: 'lorem'}, {id: 'ipsum'}, {id: 'dolor'}, {id: 'sit'}]),
         {lorem: {id: 'lorem'}, ipsum: {id: 'ipsum'}, dolor: {id: 'dolor'}, sit: {id: 'sit'}}
     )
-    t.end()
-})
-
-test('"mergeSpec" blends an object with a copy of itself transformed according to a spec', (t) => {
-    t.deepEqual(
-        mergeSpec({
-            morrison: prop('morrison'),
-            hendrix: pipe(prop('hendrix'), concat(__, 'mi')),
-            carter: pipe(prop('carter'), concat(__, 'my'))
-        }, {
-            morrison: 'jim',
-            hendrix: 'jim',
-            carter: 'jim'
-        }),
-        specResult
-    )
-    t.end()
-})
-
-test('"mergeSpec" merges new props onto the original object', (t) => {
-    t.deepEqual(mergeSpec({
-      fullName: compose(join(' '), values, pick(['firstName', 'lastName'])),
-      address: pipe(prop('address'), evolve({
-        street: trim,
-        city: compose(str => str.replace(/(?:^|\s)\S/g, toUpper), trim),
-        state: toUpper,
-        zip: compose(trim, when(is(Number), toString))
-      }))
-    }, {
-      firstName: 'Montgomery',
-      lastName: 'Burns',
-      address: {
-        street: '1000 Mammon Lane, ',
-        city: 'springfield',
-        state: 'or',
-        zip: 97403
-      }
-    }), {
-      firstName: 'Montgomery',
-      lastName: 'Burns',
-      address: {
-        street: '1000 Mammon Lane,',
-        city: 'Springfield',
-        state: 'OR',
-        zip: '97403'
-      },
-      fullName: 'Montgomery Burns'
-    })
     t.end()
 })
 
