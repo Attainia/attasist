@@ -13,6 +13,7 @@ test('Image URL strings', (t) => {
     t.equal(isImageUrl('lorem.svg'), true, 'allows svg')
     t.equal(isImageUrl('lorem.tiff'), true, 'allows tiff')
     t.equal(isImageUrl('lorem.gif'), true, 'allows gif (pronounced with a hard G, because otherwise sounds stupid)')
+    t.equal(isImageUrl('data:image/png;base64,iVBORw0KGg'), true, 'allows base64 encoded strings')
     t.end()
 })
 
