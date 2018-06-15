@@ -1,5 +1,20 @@
 import test from 'tape'
-import {isPromise, isBlankString, isValidEmail, isPlainObj, isStringieThingie} from '../lib/validations'
+import {isImageUrl, isPromise, isBlankString, isValidEmail, isPlainObj, isStringieThingie} from '../lib/validations'
+
+test('Image URL strings', (t) => {
+    t.equal(isImageUrl(' lorem.jpg'), false, 'no whitespace at the beginning')
+    t.equal(isImageUrl('lorem.jpg '), false, 'no whitespace')
+    t.equal(isImageUrl('lorem . jpg'), false, 'no whitespace in the middle')
+    t.equal(isImageUrl('loremjpg'), false, 'must have a dot before the extension')
+    t.equal(isImageUrl('/static/lorem.jpg'), true)
+    t.equal(isImageUrl('lorem.JPG'), true, 'case-insensitive')
+    t.equal(isImageUrl('lorem.png'), true, 'allows png')
+    t.equal(isImageUrl('lorem.jpeg'), true, 'allows jpeg')
+    t.equal(isImageUrl('lorem.svg'), true, 'allows svg')
+    t.equal(isImageUrl('lorem.tiff'), true, 'allows tiff')
+    t.equal(isImageUrl('lorem.gif'), true, 'allows gif (pronounced with a hard G, because otherwise sounds stupid)')
+    t.end()
+})
 
 test('Spaces in an email string are caught', (t) => {
     t.equal(isValidEmail('lorem ipsum @ dolor.sit.amet'), false)
