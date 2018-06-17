@@ -4,6 +4,7 @@ import {
     hashEm,
     dateMe,
     etc,
+    undefineMe,
     filterByKeys,
     transformValuesByKeys,
     transformMatchingValues,
@@ -12,6 +13,19 @@ import {
     toHashmap
 } from '../lib/transforms'
     
+test('"undefineMe" changes null values to undefined', (t) => {
+    t.equal(undefineMe(null), undefined, 'changes null to undefined')
+    t.equal(undefineMe('Lorem'), 'Lorem', 'strings are left alone')
+    t.equal(undefineMe(''), '', 'even empty strings')
+    t.equal(undefineMe(101), 101, 'numbers are left alone')
+    t.equal(undefineMe(0), 0, 'even falsy numbers are left alone')
+    t.equal(undefineMe(true), true, 'booleans are left alone')
+    t.equal(undefineMe(false), false, 'even falsy booleans')
+    t.deepEqual(undefineMe({}), {}, 'objects are left alone')
+    t.deepEqual(undefineMe([]), [], 'arrays are left alone')
+    t.end()
+})
+
 test('pretty formatting of date includes time and shaves off unnecessary zero-padding', (t) => {
     t.equal(dateMe('01/01/2018'), '1/1/2018, 12:00:00 AM')
     t.end()

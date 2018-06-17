@@ -1,6 +1,6 @@
 {
   "name": "attasist",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "A library of helper functions for front-end and back-end JavaScript applications",
   "main": "cjs/index.js",
   "module": "es/index.js",
