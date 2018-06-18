@@ -19,55 +19,62 @@ const developers = [
     {id: 2, name: 'Jonathan Mercier', email: 'jono.mercier@attainia.com'},
     {id: 3, name: 'Chuey Anima', email: 'chuey.anima@attainia.com'},
     {id: 4, name: 'Jason Rego', email: 'jason.rego@attainia.com'},
-    {id: 5, name: 'Lori Ordonez', email: 'stephen.mercier@attainia.com'},
-    {id: 6, name: 'Glenn Siegman', email: 'glenn.siegman@attainia.com'},
-    {id: 7, name: 'Ana Tomboulian', email: 'ana.tomboulian@attainia.com'},
-    {id: 8, name: 'Marcos Gonzales', email: 'marcos.gonzales@attainia.com'},
-    {id: 9, name: 'Michael Tomcal', email: 'michael.tomcal@attainia.com'},
-    {id: 10, name: 'Sean McHugh', email: 'sean.mchugh@attainia.com'},
-    {id: 11, name: 'Tim Graf', email: 'tim.graf@attainia.com'},
-    {id: 12, name: 'Lawrence Grant', email: 'lawrence.grant@attainia.com'},
-    {id: 13, name: 'Usha Kundapur', email: 'usha.kundapur@attainia.com'}
+    {id: 5, name: 'Lori Ordonez', email: 'lori.ordonez@attainia.com'},
+    {id: 6, name: 'Alex Maskovyak', email: 'alex.maskovyak@attainia.com'},
+    {id: 7, name: 'Glenn Siegman', email: 'glenn.siegman@attainia.com'},
+    {id: 8, name: 'Ana Tomboulian', email: 'ana.tomboulian@attainia.com'},
+    {id: 9, name: 'Marcos Gonzales', email: 'marcos.gonzales@attainia.com'},
+    {id: 10, name: 'Michael Tomcal', email: 'michael.tomcal@attainia.com'},
+    {id: 11, name: 'Sean McHugh', email: 'sean.mchugh@attainia.com'},
+    {id: 12, name: 'Tim Graf', email: 'tim.graf@attainia.com'},
+    {id: 13, name: 'Lawrence Grant', email: 'lawrence.grant@attainia.com'},
+    {id: 14, name: 'Usha Kundapur', email: 'usha.kundapur@attainia.com'}
 ]
 
 const notDevelopers = [
-    {id: 1, name: 'Mike Rosenfeld', email: 'mike.rosenfel@attainia.com'},
-    {id: 2, name: 'Eric Rosenfeld', email: 'eric.rosenfel@attainia.com'},
+    {id: 1, name: 'Mike Rozenfeld', email: 'mike.rozenfeld@attainia.com'},
+    {id: 2, name: 'Eric Rosenfeld', email: 'eric.rosenfeld@attainia.com'},
     {id: 3, name: 'Kishan Shaw', email: 'kishan.shaw@attainia.com'},
     {id: 4, name: 'David Newton', email: 'david.newton@attainia.com'},
     {id: 5, name: 'Naomi Cash', email: 'naomi.cash@attainia.com'},
-    {id: 6, name: 'Alex Maskovyak', email: 'alex.maskovyak@attainia.com'}
+    {id: 6, name: 'Brian Rogers', email: 'brian.rogers@attainia.com'},
+    {id: 7, name: 'Alex Maskovyak', email: 'alex.maskovyak@attainia.com'}
 ]
 
 test('"mergeList" combines two lists and applies unique filtering AND removes blanks', (t) => {
     t.deepEqual(
         mergeObjectList('name', 'id')(developers, notDevelopers).length,
-        13,
+        14,
         'uniq by the id'
     )
     t.deepEqual(
+        mergeObjectList(['name'], 'id')(developers, notDevelopers).length,
+        14,
+        'display prop can be an array'
+    )
+    t.deepEqual(
         mergeObjectList('name', 'name')(developers, notDevelopers).length,
-        19,
+        20,
         'uniq by the name'
     )
     t.deepEqual(
-        mergeObjectList('name', 'id')(developers, {id: 14, name: 'Some Random Dude'}).length,
-        14,
-        'uniq by the name'
+        mergeObjectList('name', 'name')(developers, {id: 14, name: 'Some Random Dude'}).length,
+        15,
+        'merge with an object'
     )
     t.deepEqual(
         mergeObjectList()(developers, notDevelopers).length,
-        19,
+        21,
         'no uniq prop or display prop specified'
     )
     t.deepEqual(
         mergeObjectList('name', 'id')(developers, null).length,
-        13,
+        14,
         'null values are ignored'
     )
     t.deepEqual(
         mergeObjectList('name', 'id')(developers, 'others').length,
-        13,
+        14,
         'string values are ignored'
     )
     t.end()
